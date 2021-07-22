@@ -194,3 +194,39 @@ class TestDrawRectangle:
         with pytest.raises(DrawingError) as excinfo:
             command.draw(canvas)
         assert excinfo.value.message == 'Cannot draw outside of the canvas boundaries.'
+
+
+class TestBucketFill:
+    def test_successfully_fill_bucket(self, filled_canvas):
+        BucketFillCommand('B 10 3 o').draw(filled_canvas)
+
+        expected_matrix = \
+            '----------------------\n' \
+            '|oooooooooooooooxxxxx|\n' \
+            '|xxxxxxooooooooox   x|\n' \
+            '|     xoooooooooxxxxx|\n' \
+            '|     xoooooooooooooo|\n' \
+            '----------------------\n'
+        assert filled_canvas.matrix_to_str() == expected_matrix
+
+        BucketFillCommand('B 17 2 s').draw(filled_canvas)
+
+        expected_matrix = \
+            '----------------------\n' \
+            '|oooooooooooooooxxxxx|\n' \
+            '|xxxxxxoooooooooxsssx|\n' \
+            '|     xoooooooooxxxxx|\n' \
+            '|     xoooooooooooooo|\n' \
+            '----------------------\n'
+        assert filled_canvas.matrix_to_str() == expected_matrix
+
+        BucketFillCommand('B 5 3 k').draw(filled_canvas)
+
+        expected_matrix = \
+            '----------------------\n' \
+            '|oooooooooooooooxxxxx|\n' \
+            '|xxxxxxoooooooooxsssx|\n' \
+            '|kkkkkxoooooooooxxxxx|\n' \
+            '|kkkkkxoooooooooooooo|\n' \
+            '----------------------\n'
+        assert filled_canvas.matrix_to_str() == expected_matrix
