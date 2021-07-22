@@ -63,6 +63,15 @@ class TestCommandCreation:
             # TODO: validate error message
 
     @pytest.mark.parametrize('command_line', [
+        'L 1 2 6 4',
+        'L 5 3 6 4',
+    ])
+    def test_fails_to_create_not_vertical_or_horizontal_line_command(self, command_line):
+        with pytest.raises(ValidationError) as excinfo:
+            CreateLineCommand(command_line)
+        assert excinfo.value.message == 'Currently only horizontal or vertical lines are supported.'
+
+    @pytest.mark.parametrize('command_line', [
         'C',
         'C 20',
         'X',
@@ -159,4 +168,3 @@ class TestDrawLine:
             '|     x              |\n' \
             '----------------------\n'
         assert canvas.matrix_to_str() == expected_matrix
-

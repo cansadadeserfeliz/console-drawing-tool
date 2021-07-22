@@ -7,7 +7,9 @@ from config import (
 
 
 class ValidationError(Exception):
-    pass
+
+    def __init__(self, message=''):
+        self.message = message
 
 
 class Canvas:
@@ -74,6 +76,9 @@ class CreateLineCommand(Command):
             y2 = int(data['y2'])
         except ValueError:
             raise ValidationError('All command arguments must be integers')
+
+        if x1 != x2 and y1 != y2:
+            raise ValidationError('Currently only horizontal or vertical lines are supported.')
 
         return {
             'x1': x1,
