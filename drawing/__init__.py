@@ -69,13 +69,10 @@ class CreateLineCommand(Command):
 
     @staticmethod
     def validate(data):
-        try:
-            x1 = int(data['x1'])
-            y1 = int(data['y1'])
-            x2 = int(data['x2'])
-            y2 = int(data['y2'])
-        except ValueError:
-            raise ValidationError('All command arguments must be integers')
+        x1 = int(data['x1'])
+        y1 = int(data['y1'])
+        x2 = int(data['x2'])
+        y2 = int(data['y2'])
 
         if x1 != x2 and y1 != y2:
             raise ValidationError('Currently only horizontal or vertical lines are supported.')
