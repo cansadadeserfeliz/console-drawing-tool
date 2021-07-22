@@ -11,7 +11,7 @@ class ValidationError(Exception):
 
 
 class Canvas:
-    pattern = r'C (?P<w>[1-9]\d*) (?P<h>[1-9]\d*)'
+    pattern = r'^C (?P<w>[1-9]\d*) (?P<h>[1-9]\d*)$'
 
     def __init__(self, line):
         result = re.match(self.pattern, line)
@@ -46,7 +46,7 @@ class Command:
 
 
 class CreateLineCommand(Command):
-    pattern = r'L (?P<x1>[1-9]\d*) (?P<y1>[1-9]\d*) (?P<x2>[1-9]\d*) (?P<y2>[1-9]\d*)'
+    pattern = r'^L (?P<x1>[1-9]\d*) (?P<y1>[1-9]\d*) (?P<x2>[1-9]\d*) (?P<y2>[1-9]\d*)$'
 
     def __init__(self, line):
         self.command_line = line
@@ -82,7 +82,7 @@ class CreateLineCommand(Command):
 
 
 class CreateRectangleCommand(Command):
-    pattern = r'R (?P<x1>[1-9]\d*) (?P<y1>[1-9]\d*) (?P<x2>[1-9]\d*) (?P<y2>[1-9]\d*)'
+    pattern = r'^R (?P<x1>[1-9]\d*) (?P<y1>[1-9]\d*) (?P<x2>[1-9]\d*) (?P<y2>[1-9]\d*)$'
 
     def __init__(self, line):
         self.command_line = line
@@ -115,7 +115,7 @@ class CreateRectangleCommand(Command):
 
 
 class BucketFillCommand(Command):
-    pattern = r'B (?P<x>[1-9]\d*) (?P<y>[1-9]\d*) (?P<c>\w*)'  # TODO: add more symbols for color
+    pattern = r'^B (?P<x>[1-9]\d*) (?P<y>[1-9]\d*) (?P<c>\w)$'  # TODO: add more symbols for color
 
     def __init__(self, line):
         self.command_line = line
