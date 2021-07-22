@@ -131,3 +131,32 @@ class TestCommandCreation:
             BucketFillCommand(command_line)
             # TODO: validate error message
 
+
+class TestDrawLine:
+
+    def test_successfully_draw_vertical_line(self, canvas):
+        command = CreateLineCommand('L 1 2 6 2')
+        command.draw(canvas)
+
+        expected_matrix = \
+            '----------------------\n' \
+            '|                    |\n' \
+            '|xxxxxx              |\n' \
+            '|                    |\n' \
+            '|                    |\n' \
+            '----------------------\n'
+        assert canvas.matrix_to_str() == expected_matrix
+
+    def test_successfully_draw_horizontal_line(self, canvas):
+        command = CreateLineCommand('L 6 3 6 4')
+        command.draw(canvas)
+
+        expected_matrix = \
+            '----------------------\n' \
+            '|                    |\n' \
+            '|                    |\n' \
+            '|     x              |\n' \
+            '|     x              |\n' \
+            '----------------------\n'
+        assert canvas.matrix_to_str() == expected_matrix
+
