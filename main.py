@@ -3,7 +3,7 @@ from drawing import (
     CreateLineCommand,
     CreateRectangleCommand,
     BucketFillCommand,
-    ValidationError,
+    CommandValidationError,
 )
 from config import (
     INPUT_FILENAME,
@@ -36,7 +36,7 @@ def read_input(filename=INPUT_FILENAME):
         for index, line in enumerate(reader.readlines()):
             if index == 0:
                 if not line.startswith('C'):
-                    raise ValidationError('"Create Canvas" command is not provided.')
+                    raise CommandValidationError('"Create Canvas" command is not provided.')
                 canvas = Canvas(line)
                 continue
             # TODO: check if the line is empty

@@ -6,7 +6,7 @@ from config import (
 )
 
 
-class ValidationError(Exception):
+class CommandValidationError(Exception):
 
     def __init__(self, message=''):
         self.message = message
@@ -18,7 +18,7 @@ class Canvas:
     def __init__(self, line):
         result = re.match(self.pattern, line)
         if result is None:
-            raise ValidationError()
+            raise CommandValidationError()
         result_dict = result.groupdict()
 
         self.w = int(result_dict['w'])
@@ -46,7 +46,7 @@ class Command:
     def parse_command_line(self):
         result = re.match(self.pattern, self.command_line)
         if result is None:
-            raise ValidationError()
+            raise CommandValidationError()
         return result.groupdict()
 
     @staticmethod
@@ -75,7 +75,7 @@ class CreateLineCommand(Command):
         y2 = int(data['y2'])
 
         if x1 != x2 and y1 != y2:
-            raise ValidationError('Currently only horizontal or vertical lines are supported.')
+            raise CommandValidationError('Currently only horizontal or vertical lines are supported.')
 
         return {
             'x1': x1,
@@ -118,7 +118,7 @@ class CreateRectangleCommand(Command):
             x2 = int(data['x2'])
             y2 = int(data['y2'])
         except ValueError:
-            raise ValidationError('All command arguments must be integers')
+            raise CommandValidationError('All command arguments must be integers')
 
         return {
             'x1': x1,
@@ -155,7 +155,7 @@ class BucketFillCommand(Command):
             x = int(data['x'])
             y = int(data['y'])
         except ValueError:
-            raise ValidationError('All command arguments must be integers')
+            raise CommandValidationError('All command arguments must be integers')
         c = data['c']
 
         return {

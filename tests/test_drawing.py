@@ -5,7 +5,7 @@ from drawing import (
     CreateLineCommand,
     CreateRectangleCommand,
     BucketFillCommand,
-    ValidationError,
+    CommandValidationError,
 )
 
 
@@ -30,7 +30,7 @@ class TestCommandCreation:
         'C 20 4 11',
     ])
     def test_fails_to_create_canvas_with_invalid_input(self, command_line):
-        with pytest.raises(ValidationError):
+        with pytest.raises(CommandValidationError):
             Canvas(command_line)
             # TODO: validate error message
 
@@ -58,7 +58,7 @@ class TestCommandCreation:
         'L 1 2 6 -2',
     ])
     def test_fails_to_create_line_command_with_invalid_input(self, command_line):
-        with pytest.raises(ValidationError):
+        with pytest.raises(CommandValidationError):
             CreateLineCommand(command_line)
             # TODO: validate error message
 
@@ -67,7 +67,7 @@ class TestCommandCreation:
         'L 5 3 6 4',
     ])
     def test_fails_to_create_not_vertical_or_horizontal_line_command(self, command_line):
-        with pytest.raises(ValidationError) as excinfo:
+        with pytest.raises(CommandValidationError) as excinfo:
             CreateLineCommand(command_line)
         assert excinfo.value.message == 'Currently only horizontal or vertical lines are supported.'
 
@@ -84,7 +84,7 @@ class TestCommandCreation:
         'C 20 4 11',
     ])
     def test_fails_to_create_canvas_with_invalid_input(self, command_line):
-        with pytest.raises(ValidationError):
+        with pytest.raises(CommandValidationError):
             Canvas(command_line)
             # TODO: validate error message
 
@@ -112,7 +112,7 @@ class TestCommandCreation:
         'L 1 2 6 -2',
     ])
     def test_fails_to_create_rectangle_command_with_invalid_input(self, command_line):
-        with pytest.raises(ValidationError):
+        with pytest.raises(CommandValidationError):
             CreateRectangleCommand(command_line)
             # TODO: validate error message
 
@@ -136,7 +136,7 @@ class TestCommandCreation:
         'B 10 3 oo',
     ])
     def test_fails_to_bucket_fill_command_with_invalid_input(self, command_line):
-        with pytest.raises(ValidationError):
+        with pytest.raises(CommandValidationError):
             BucketFillCommand(command_line)
             # TODO: validate error message
 
