@@ -30,6 +30,12 @@ class Canvas:
             self.matrix.append(['|'] + [EMPTY_COLOR] * self.w + ['|'])
         self.matrix.append(y_border)
 
+    def matrix_to_str(self):
+        output = ''
+        for line in self.matrix:
+            output += ''.join(line) + '\n'
+        return output
+
 
 class Command:
     pattern = None
