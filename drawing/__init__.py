@@ -4,12 +4,7 @@ from config import (
     MARKER_COLOR,
     EMPTY_COLOR,
 )
-
-
-class CommandValidationError(Exception):
-
-    def __init__(self, message=''):
-        self.message = message
+from .exceptions import CommandValidationError
 
 
 class Canvas:

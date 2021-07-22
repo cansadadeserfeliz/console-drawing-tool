@@ -3,8 +3,8 @@ from drawing import (
     CreateLineCommand,
     CreateRectangleCommand,
     BucketFillCommand,
-    CommandValidationError,
 )
+from drawing.exceptions import CommandNotFound
 from config import (
     INPUT_FILENAME,
     OUTPUT_FILENAME,
@@ -36,13 +36,15 @@ def read_input(filename=INPUT_FILENAME):
         for index, line in enumerate(reader.readlines()):
             if index == 0:
                 if not line.startswith('C'):
-                    raise CommandValidationError('"Create Canvas" command is not provided.')
+                    raise CommandNotFound('"Create Canvas" command is not provided.')
                 canvas = Canvas(line)
                 continue
             # TODO: check if the line is empty
             command_name = line[0]
-            # TODO: check if does not match any command
-            command_class = COMMAND_MAPPER[command_name]
+            try:
+                command_class = COMMAND_MAPPER[command_name]
+            except ValueError:
+                raise CommandNotFound(f'Unknown command: {command_name}.')
             canvas.commands.append(command_class(line))
     return canvas
 
