@@ -1,0 +1,16 @@
+# File types
+*.pyc
+
+# Editor configuration files
+.idea
+
+# Coverage reports
+htmlcov/
+.coverage
+.coverage.*
+coverage.xml
+*.cover
+
+# Files
+input.txt
+output.txt
