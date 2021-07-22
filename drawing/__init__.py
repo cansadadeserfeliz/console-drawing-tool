@@ -41,7 +41,8 @@ class Command:
             raise ValidationError()
         return result.groupdict()
 
-    def validate(self):
+    @staticmethod
+    def validate(data):
         raise NotImplementedError
 
 
