@@ -8,13 +8,7 @@ class ValidationError(Exception):
     pass
 
 
-class Command:
-
-    def validate(self):
-        raise NotImplementedError
-
-
-class Canvas(Command):
+class Canvas:
 
     def __init__(self, w, h):
         self.w = int(w)
@@ -28,6 +22,11 @@ class Canvas(Command):
             self.matrix.append(['|'] + [EMPTY_COLOR] * self.w + ['|'])
         self.matrix.append(y_border)
 
+
+class Command:
+
+    def validate(self):
+        raise NotImplementedError
 
 class CreateLineCommand(Command):
 
