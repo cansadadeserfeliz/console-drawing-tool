@@ -51,22 +51,29 @@ class CreateLineCommand(Command):
     def __init__(self, line):
         self.command_line = line
         data = self.parse_command_line()
+        cleaned_data = self.validate(data)
 
-        self.x1 = data['x1']
-        self.y1 = data['y1']
-        self.x2 = data['x2']
-        self.y2 = data['y2']
+        self.x1 = cleaned_data['x1']
+        self.y1 = cleaned_data['y1']
+        self.x2 = cleaned_data['x2']
+        self.y2 = cleaned_data['y2']
 
-        self.validate()
-
-    def validate(self):
+    @staticmethod
+    def validate(data):
         try:
-            self.x1 = int(self.x1)
-            self.y1 = int(self.y1)
-            self.x2 = int(self.x2)
-            self.y2 = int(self.y2)
+            x1 = int(data['x1'])
+            y1 = int(data['y1'])
+            x2 = int(data['x2'])
+            y2 = int(data['y2'])
         except ValueError:
             raise ValidationError('All command arguments must be integers')
+
+        return {
+            'x1': x1,
+            'y1': y1,
+            'x2': x2,
+            'y2': y2,
+        }
 
     def draw(self, canvas):
         # TODO: validate canvas dimensions
@@ -87,22 +94,29 @@ class CreateRectangleCommand(Command):
     def __init__(self, line):
         self.command_line = line
         data = self.parse_command_line()
+        cleaned_data = self.validate(data)
 
-        self.x1 = data['x1']
-        self.y1 = data['y1']
-        self.x2 = data['x2']
-        self.y2 = data['y2']
+        self.x1 = cleaned_data['x1']
+        self.y1 = cleaned_data['y1']
+        self.x2 = cleaned_data['x2']
+        self.y2 = cleaned_data['y2']
 
-        self.validate()
-
-    def validate(self):
+    @staticmethod
+    def validate(data):
         try:
-            self.x1 = int(self.x1)
-            self.y1 = int(self.y1)
-            self.x2 = int(self.x2)
-            self.y2 = int(self.y2)
+            x1 = int(data['x1'])
+            y1 = int(data['y1'])
+            x2 = int(data['x2'])
+            y2 = int(data['y2'])
         except ValueError:
             raise ValidationError('All command arguments must be integers')
+
+        return {
+            'x1': x1,
+            'y1': y1,
+            'x2': x2,
+            'y2': y2,
+        }
 
     def draw(self, canvas):
         # TODO: validate canvas dimensions
@@ -120,19 +134,26 @@ class BucketFillCommand(Command):
     def __init__(self, line):
         self.command_line = line
         data = self.parse_command_line()
+        cleaned_data = self.validate(data)
 
-        self.x = data['x']
-        self.y = data['y']
-        self.c = data['c']
+        self.x = cleaned_data['x']
+        self.y = cleaned_data['y']
+        self.c = cleaned_data['c']
 
-        self.validate()
-
-    def validate(self):
+    @staticmethod
+    def validate(data):
         try:
-            self.x = int(self.x)
-            self.y = int(self.y)
+            x = int(data['x'])
+            y = int(data['y'])
         except ValueError:
-            raise ValidationError('Point coordinates arguments must be integers')
+            raise ValidationError('All command arguments must be integers')
+        c = data['c']
+
+        return {
+            'x': x,
+            'y': y,
+            'c': c,
+        }
 
     def fill_recursive(self, canvas, x, y):
         if canvas.matrix[y][x] != EMPTY_COLOR:
