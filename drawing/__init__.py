@@ -1,3 +1,5 @@
+import re
+
 from config import (
     MARKER_COLOR,
     EMPTY_COLOR,
@@ -9,10 +11,16 @@ class ValidationError(Exception):
 
 
 class Canvas:
+    pattern = r'C (?P<w>[1-9]\d*) (?P<h>[1-9]\d*)'
 
-    def __init__(self, w, h):
-        self.w = int(w)
-        self.h = int(h)
+    def __init__(self, line):
+        result = re.match(self.pattern, line)
+        if result is None:
+            raise ValidationError()
+        result_dict = result.groupdict()
+
+        self.w = int(result_dict['w'])
+        self.h = int(result_dict['h'])
         self.commands = []
 
         # Create an empty canvas matrix
@@ -24,18 +32,41 @@ class Canvas:
 
 
 class Command:
+    pattern = None
+    command_line = None
+
+    def parse_command_line(self):
+        result = re.match(self.pattern, self.command_line)
+        if result is None:
+            raise ValidationError()
+        return result.groupdict()
 
     def validate(self):
         raise NotImplementedError
 
 
 class CreateLineCommand(Command):
+    pattern = r'L (?P<x1>[1-9]\d*) (?P<y1>[1-9]\d*) (?P<x2>[1-9]\d*) (?P<y2>[1-9]\d*)'
 
-    def __init__(self, x1, y1, x2, y2):
-        self.x1 = int(x1)
-        self.y1 = int(y1)
-        self.x2 = int(x2)
-        self.y2 = int(y2)
+    def __init__(self, line):
+        self.command_line = line
+        data = self.parse_command_line()
+
+        self.x1 = data['x1']
+        self.y1 = data['y1']
+        self.x2 = data['x2']
+        self.y2 = data['y2']
+
+        self.validate()
+
+    def validate(self):
+        try:
+            self.x1 = int(self.x1)
+            self.y1 = int(self.y1)
+            self.x2 = int(self.x2)
+            self.y2 = int(self.y2)
+        except ValueError:
+            raise ValidationError('All command arguments must be integers')
 
     def draw(self, canvas):
         # TODO: validate canvas dimensions
@@ -51,12 +82,27 @@ class CreateLineCommand(Command):
 
 
 class CreateRectangleCommand(Command):
+    pattern = r'R (?P<x1>[1-9]\d*) (?P<y1>[1-9]\d*) (?P<x2>[1-9]\d*) (?P<y2>[1-9]\d*)'
 
-    def __init__(self, x1, y1, x2, y2):
-        self.x1 = int(x1)
-        self.y1 = int(y1)
-        self.x2 = int(x2)
-        self.y2 = int(y2)
+    def __init__(self, line):
+        self.command_line = line
+        data = self.parse_command_line()
+
+        self.x1 = data['x1']
+        self.y1 = data['y1']
+        self.x2 = data['x2']
+        self.y2 = data['y2']
+
+        self.validate()
+
+    def validate(self):
+        try:
+            self.x1 = int(self.x1)
+            self.y1 = int(self.y1)
+            self.x2 = int(self.x2)
+            self.y2 = int(self.y2)
+        except ValueError:
+            raise ValidationError('All command arguments must be integers')
 
     def draw(self, canvas):
         # TODO: validate canvas dimensions
@@ -69,11 +115,24 @@ class CreateRectangleCommand(Command):
 
 
 class BucketFillCommand(Command):
+    pattern = r'B (?P<x>[1-9]\d*) (?P<y>[1-9]\d*) (?P<c>\w*)'  # TODO: add more symbols for color
 
-    def __init__(self, x, y, c):
-        self.x = int(x)
-        self.y = int(y)
-        self.c = c
+    def __init__(self, line):
+        self.command_line = line
+        data = self.parse_command_line()
+
+        self.x = data['x']
+        self.y = data['y']
+        self.c = data['c']
+
+        self.validate()
+
+    def validate(self):
+        try:
+            self.x = int(self.x)
+            self.y = int(self.y)
+        except ValueError:
+            raise ValidationError('Point coordinates arguments must be integers')
 
     def fill_recursive(self, canvas, x, y):
         if canvas.matrix[y][x] != EMPTY_COLOR:

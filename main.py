@@ -12,12 +12,6 @@ from config import (
     OUTPUT_FILENAME,
 )
 
-CREATE_CANVAS = r'C (?P<w>[1-9]\d*) (?P<h>[1-9]\d*)'
-CREATE_LINE = r'(?P<name>L) (?P<x1>[1-9]\d*) (?P<y1>[1-9]\d*) (?P<x2>[1-9]\d*) (?P<y2>[1-9]\d*)'
-CREATE_RECTANGLE = r'(?P<name>R) (?P<x1>[1-9]\d*) (?P<y1>[1-9]\d*) (?P<x2>[1-9]\d*) (?P<y2>[1-9]\d*)'
-BUCKET_FILL = r'(?P<name>B) (?P<x>[1-9]\d*) (?P<y>[1-9]\d*) (?P<c>\w*)'  # TODO: add more symbols for color
-DRAWING_COMMAND_PATTERNS = (CREATE_CANVAS, CREATE_LINE, CREATE_RECTANGLE, BUCKET_FILL)
-
 COMMAND_MAPPER = {
     'L': CreateLineCommand,
     'R': CreateRectangleCommand,
@@ -43,24 +37,15 @@ def read_input(filename=INPUT_FILENAME):
     with open(filename) as reader:
         for index, line in enumerate(reader.readlines()):
             if index == 0:
-                result = re.match(CREATE_CANVAS, line)
-                if result is None:
+                if not line.startswith('C'):
                     raise ValidationError('"Create Canvas" command is not provided.')
-                canvas = Canvas(**result.groupdict())
+                canvas = Canvas(line)
                 continue
-            for command_pattern in DRAWING_COMMAND_PATTERNS:
-                result = re.match(command_pattern, line)
-                if result is None:
-                    continue
-                result_dict = result.groupdict()
-                command_name = result_dict.pop('name')
-                command_class = COMMAND_MAPPER[command_name]
-                command = command_class(**result_dict)
-                break
-            if command:
-                canvas.commands.append(command)
-            else:
-                raise ValidationError(f'"{line}" does not match any drawing command.')
+            # TODO: check if the line is empty
+            command_name = line[0]
+            # TODO: check if does not match any command
+            command_class = COMMAND_MAPPER[command_name]
+            canvas.commands.append(command_class(line))
     return canvas
 
 
