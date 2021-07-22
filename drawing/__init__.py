@@ -28,6 +28,7 @@ class Command:
     def validate(self):
         raise NotImplementedError
 
+
 class CreateLineCommand(Command):
 
     def __init__(self, x1, y1, x2, y2):
