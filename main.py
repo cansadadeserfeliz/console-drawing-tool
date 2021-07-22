@@ -17,17 +17,17 @@ COMMAND_MAPPER = {
 }
 
 
-def draw_canvas_into_file(canvas_matrix, mode='a'):
+def draw_canvas_into_file(canvas_matrix_str, mode='a'):
     with open(OUTPUT_FILENAME, mode) as writer:
-        writer.writelines([''.join(line) + '\n' for line in canvas_matrix])
+        writer.write(canvas_matrix_str)
 
 
 def draw(canvas):
-    draw_canvas_into_file(canvas.matrix, mode='w')
+    draw_canvas_into_file(canvas.matrix_to_str(), mode='w')
 
     for command in canvas.commands:
         command.draw(canvas)
-        draw_canvas_into_file(canvas.matrix)
+        draw_canvas_into_file(canvas.matrix_to_str())
 
 
 def read_input(filename=INPUT_FILENAME):
