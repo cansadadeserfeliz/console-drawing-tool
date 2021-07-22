@@ -120,13 +120,13 @@ class CreateRectangleCommand(Command):
 
     @staticmethod
     def validate(data):
-        try:
-            x1 = int(data['x1'])
-            y1 = int(data['y1'])
-            x2 = int(data['x2'])
-            y2 = int(data['y2'])
-        except ValueError:
-            raise CommandValidationError('All command arguments must be integers')
+        x1 = int(data['x1'])
+        y1 = int(data['y1'])
+        x2 = int(data['x2'])
+        y2 = int(data['y2'])
+
+        if x1 > x2 or y1 > y2:
+            raise CommandValidationError('(x1,y1) should be an upper left corner and (x2,y2) - lower right corner.')
 
         return {
             'x1': x1,
@@ -136,7 +136,19 @@ class CreateRectangleCommand(Command):
         }
 
     def draw(self, canvas):
-        # TODO: validate canvas dimensions
+        # Validate canvas boundaries
+        if any([
+            self.x1 < 1,
+            self.x2 < 1,
+            self.x1 < 1,
+            self.y2 < 1,
+            self.x1 > canvas.w,
+            self.x2 > canvas.w,
+            self.y1 > canvas.h,
+            self.y2 > canvas.h,
+        ]):
+            raise DrawingError('Cannot draw outside of the canvas boundaries.')
+
         for x in range(self.x1, self.x2 + 1):
             canvas.matrix[self.y1][x] = MARKER_COLOR
             canvas.matrix[self.y2][x] = MARKER_COLOR

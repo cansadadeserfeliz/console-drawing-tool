@@ -82,25 +82,27 @@ class TestCommandCreation:
         assert command.x2 == 6
         assert command.y2 == 2
 
-    @pytest.mark.parametrize('command_line', [
-        'L',
-        'X',
-        'L 1',
-        'L 1 2 6',
-        'L 1 2 6 2 6',
-        'L x 2 6 2',
-        'L 1 x 6 2',
-        'L 1 2 x 2',
-        'L 1 2 6 x',
-        'L -1 2 6 2',
-        'L 1 -2 6 2',
-        'L 1 2 -6 2',
-        'L 1 2 6 -2',
+    @pytest.mark.parametrize('command_line, error_message', [
+        ('R', ''),
+        ('X', ''),
+        ('R 1', ''),
+        ('R 1 2 6', ''),
+        ('R 1 2 6 2 6', ''),
+        ('R x 2 6 2', ''),
+        ('R 1 x 6 2', ''),
+        ('R 1 2 x 2', ''),
+        ('R 1 2 6 x', ''),
+        ('R -1 2 6 2', ''),
+        ('R 1 -2 6 2', ''),
+        ('R 1 2 -6 2', ''),
+        ('R 1 2 6 -2', ''),
+        ('R 1 3 6 2', '(x1,y1) should be an upper left corner and (x2,y2) - lower right corner.'),
+        ('R 7 2 6 2', '(x1,y1) should be an upper left corner and (x2,y2) - lower right corner.'),
     ])
-    def test_fails_to_create_rectangle_command_with_invalid_input(self, command_line):
-        with pytest.raises(CommandValidationError):
+    def test_fails_to_create_rectangle_command_with_invalid_input(self, command_line, error_message):
+        with pytest.raises(CommandValidationError) as excinfo:
             CreateRectangleCommand(command_line)
-            # TODO: validate error message
+        assert excinfo.value.message == error_message
 
     def test_bucket_fill_command(self):
         command = BucketFillCommand('B 10 3 o')
@@ -166,3 +168,29 @@ class TestDrawLine:
             '----------------------\n'
         assert canvas.matrix_to_str() == expected_matrix
 
+
+class TestDrawRectangle:
+
+    def test_successfully_draw_rectangle(self, canvas):
+        command = CreateRectangleCommand('R 16 1 20 3')
+        command.draw(canvas)
+
+        expected_matrix = \
+            '----------------------\n' \
+            '|               xxxxx|\n' \
+            '|               x   x|\n' \
+            '|               xxxxx|\n' \
+            '|                    |\n' \
+            '----------------------\n'
+        assert canvas.matrix_to_str() == expected_matrix
+
+    @pytest.mark.parametrize('command_line', [
+        'R 16 1 20 5',
+        'R 16 1 21 3',
+    ])
+    def test_fails_if_rectangle_does_not_match_canvas_area(self, command_line, canvas):
+        command = CreateRectangleCommand(command_line)
+
+        with pytest.raises(DrawingError) as excinfo:
+            command.draw(canvas)
+        assert excinfo.value.message == 'Cannot draw outside of the canvas boundaries.'
