@@ -198,5 +198,16 @@ class BucketFillCommand(Command):
         self.fill_recursive(canvas, x - 1, y)
 
     def draw(self, canvas):
-        # TODO: validate canvas dimensions
+        # Validate canvas boundaries
+        if any([
+            self.x < 1,
+            self.y < 1,
+            self.x > canvas.w,
+            self.y > canvas.h,
+        ]):
+            raise DrawingError('Cannot draw outside of the canvas boundaries.')
+
+        if canvas.matrix[self.y][self.x] != EMPTY_COLOR:
+            raise DrawingError('Target area is already filled.')
+
         self.fill_recursive(canvas, self.x, self.y)
