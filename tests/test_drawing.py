@@ -74,23 +74,6 @@ class TestCommandCreation:
             CreateLineCommand(command_line)
         assert excinfo.value.message == 'Currently only horizontal or vertical lines are supported.'
 
-    @pytest.mark.parametrize('command_line', [
-        'C',
-        'C 20',
-        'X',
-        'X 20 4',
-        'C x 4',
-        'C 20 x',
-        'C x 4',
-        'C -1 4',
-        'C 20 -1',
-        'C 20 4 11',
-    ])
-    def test_fails_to_create_canvas_with_invalid_input(self, command_line):
-        with pytest.raises(CommandValidationError):
-            Canvas(command_line)
-            # TODO: validate error message
-
     def test_create_rectangle_command(self):
         command = CreateRectangleCommand('R 1 2 6 2')
 
