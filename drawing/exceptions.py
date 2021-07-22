@@ -12,7 +12,7 @@ class CommandValidationError(Exception):
         self.message = message
 
 
-class DrawingValidationError(Exception):
+class DrawingError(Exception):
     """Command syntax or parameters are invalid."""
 
     def __init__(self, message=''):

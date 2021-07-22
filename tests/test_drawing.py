@@ -5,7 +5,10 @@ from drawing import (
     CreateLineCommand,
     CreateRectangleCommand,
     BucketFillCommand,
+)
+from drawing.exceptions import (
     CommandValidationError,
+    DrawingError,
 )
 
 
@@ -156,6 +159,17 @@ class TestDrawLine:
             '----------------------\n'
         assert canvas.matrix_to_str() == expected_matrix
 
+    @pytest.mark.parametrize('command_line', [
+        'L 1 2 21 2',
+        'L 6 3 6 5',
+    ])
+    def test_fails_if_line_does_not_match_canvas_area(self, command_line, canvas):
+        command = CreateLineCommand(command_line)
+
+        with pytest.raises(DrawingError) as excinfo:
+            command.draw(canvas)
+        assert excinfo.value.message == 'Cannot draw outside of the canvas boundaries.'
+
     def test_successfully_draw_horizontal_line(self, canvas):
         command = CreateLineCommand('L 6 3 6 4')
         command.draw(canvas)
@@ -168,3 +182,4 @@ class TestDrawLine:
             '|     x              |\n' \
             '----------------------\n'
         assert canvas.matrix_to_str() == expected_matrix
+

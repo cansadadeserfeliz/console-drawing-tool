@@ -5,6 +5,7 @@ from config import (
     EMPTY_COLOR,
 )
 from .exceptions import CommandValidationError
+from .exceptions import DrawingError
 
 
 class Canvas:
@@ -80,7 +81,19 @@ class CreateLineCommand(Command):
         }
 
     def draw(self, canvas):
-        # TODO: validate canvas dimensions
+        # Validate canvas boundaries
+        if any([
+            self.x1 < 1,
+            self.x2 < 1,
+            self.x1 < 1,
+            self.y2 < 1,
+            self.x1 > canvas.w,
+            self.x2 > canvas.w,
+            self.y1 > canvas.h,
+            self.y2 > canvas.h,
+        ]):
+            raise DrawingError('Cannot draw outside of the canvas boundaries.')
+
         # TODO: refactor duplicated code
         if self.x1 == self.x2:
             x = self.x1
