@@ -1,3 +1,8 @@
+
+[![Build Status](https://travis-ci.com/cansadadeserfeliz/console-drawing-tool.svg?branch=master)](https://travis-ci.com/cansadadeserfeliz/console-drawing-tool)
+[![Code coverage](https://codecov.io/gh/cansadadeserfeliz/console-drawing-tool/branch/master/graphs/badge.svg?branch=master)](https://codecov.io/github/cansadadeserfeliz/console-drawing-tool?branch=master)
+
+
 # Coding challenge
 
 ## Drawing tool
