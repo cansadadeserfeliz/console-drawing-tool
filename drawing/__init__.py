@@ -19,7 +19,6 @@ class Canvas:
 
         self.w = int(result_dict['w'])
         self.h = int(result_dict['h'])
-        self.commands = []
 
         # Create an empty canvas matrix
         y_border = ['-'] * (self.w + 2)
@@ -27,6 +26,10 @@ class Canvas:
         for _ in range(self.h):
             self.matrix.append(['|'] + [EMPTY_COLOR] * self.w + ['|'])
         self.matrix.append(y_border)
+
+    def apply_command(self, command):
+        assert isinstance(command, Command)
+        command.draw(self)
 
     def matrix_to_str(self):
         output = ''
@@ -94,13 +97,14 @@ class CreateLineCommand(Command):
         ]):
             raise DrawingError('Cannot draw outside of the canvas boundaries.')
 
-        # TODO: refactor duplicated code
         if self.x1 == self.x2:
             x = self.x1
+            # Draw vertical lines
             for y in range(self.y1, self.y2 + 1):
                 canvas.matrix[y][x] = MARKER_COLOR
         elif self.y1 == self.y2:
             y = self.y1
+            # Draw horizontal lines
             for x in range(self.x1, self.x2 + 1):
                 canvas.matrix[y][x] = MARKER_COLOR
 
@@ -149,16 +153,18 @@ class CreateRectangleCommand(Command):
         ]):
             raise DrawingError('Cannot draw outside of the canvas boundaries.')
 
+        # Draw horizontal lines
         for x in range(self.x1, self.x2 + 1):
             canvas.matrix[self.y1][x] = MARKER_COLOR
             canvas.matrix[self.y2][x] = MARKER_COLOR
+        # Draw vertical lines
         for y in range(self.y1, self.y2 + 1):
             canvas.matrix[y][self.x1] = MARKER_COLOR
             canvas.matrix[y][self.x2] = MARKER_COLOR
 
 
 class BucketFillCommand(Command):
-    pattern = r'^B (?P<x>[1-9]\d*) (?P<y>[1-9]\d*) (?P<c>\w)$'  # TODO: add more symbols for color
+    pattern = r'^B (?P<x>[1-9]\d*) (?P<y>[1-9]\d*) (?P<c>\w)$'
 
     def __init__(self, line):
         self.command_line = line

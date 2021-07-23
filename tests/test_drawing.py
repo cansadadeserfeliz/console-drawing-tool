@@ -35,7 +35,6 @@ class TestCommandCreation:
     def test_fails_to_create_canvas_with_invalid_input(self, command_line):
         with pytest.raises(CommandValidationError):
             Canvas(command_line)
-            # TODO: validate error message
 
     def test_create_line_command(self):
         command = CreateLineCommand('L 1 2 6 2')
@@ -63,7 +62,6 @@ class TestCommandCreation:
     def test_fails_to_create_line_command_with_invalid_input(self, command_line):
         with pytest.raises(CommandValidationError):
             CreateLineCommand(command_line)
-            # TODO: validate error message
 
     @pytest.mark.parametrize('command_line', [
         'L 1 2 6 4',
@@ -126,7 +124,6 @@ class TestCommandCreation:
     def test_fails_to_bucket_fill_command_with_invalid_input(self, command_line):
         with pytest.raises(CommandValidationError):
             BucketFillCommand(command_line)
-            # TODO: validate error message
 
 
 class TestDrawLine:

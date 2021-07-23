@@ -8,15 +8,15 @@ from .conftest import _write_to_file
 
 
 def test_successfully_draw_in_file(input_file, output_file):
-    canvas = read_input(filename=input_file.strpath)
+    canvas, commands = read_input(filename=input_file.strpath)
 
     assert canvas is not None
     assert isinstance(canvas, Canvas)
     assert canvas.w == 20
     assert canvas.h == 4
-    assert len(canvas.commands) == 4
+    assert len(commands) == 4
 
-    draw_canvas_into_file(canvas, filename=output_file.strpath)
+    draw_canvas_into_file(canvas, commands, filename=output_file.strpath)
 
     expected_output_file_content = \
         '----------------------\n' \
