@@ -241,3 +241,12 @@ class TestBucketFill:
         with pytest.raises(DrawingError) as excinfo:
             BucketFillCommand(command_line).draw(filled_canvas)
         assert excinfo.value.message == 'Target area is already filled.'
+
+    @pytest.mark.parametrize('command_line', [
+        'B 21 2 o',
+        'B 6 5 o',
+    ])
+    def test_fails_if_point_is_outside_canvas_area(self, command_line, canvas):
+        with pytest.raises(DrawingError) as excinfo:
+            BucketFillCommand(command_line).draw(canvas)
+        assert excinfo.value.message == 'Cannot draw outside of the canvas boundaries.'
