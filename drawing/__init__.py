@@ -187,10 +187,6 @@ class BucketFillCommand(Command):
     def fill_recursive(self, canvas, x, y):
         if canvas.matrix[y][x] != EMPTY_COLOR:
             return
-        if x < 1 or x > len(canvas.matrix[0]) - 1:
-            return
-        if y < 1 or y > len(canvas.matrix) - 1:
-            return
         canvas.matrix[y][x] = self.c
         self.fill_recursive(canvas, x, y + 1)
         self.fill_recursive(canvas, x, y - 1)
