@@ -171,11 +171,8 @@ class BucketFillCommand(Command):
 
     @staticmethod
     def validate(data):
-        try:
-            x = int(data['x'])
-            y = int(data['y'])
-        except ValueError:
-            raise CommandValidationError('All command arguments must be integers')
+        x = int(data['x'])
+        y = int(data['y'])
         c = data['c']
 
         return {
