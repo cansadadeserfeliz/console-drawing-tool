@@ -45,3 +45,16 @@ The behaviour of this is the same as that of the "bucket fill" tool in paint
 programs.
 
 Please take into account that you can only draw if a canvas has been created.
+
+# Installation
+
+    pip install -r requirements.txt
+    cp sample_input.txt input.txt
+
+# Run the script
+
+    python main.py
+
+# Run unit tests
+
+    pytest
