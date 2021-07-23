@@ -230,3 +230,14 @@ class TestBucketFill:
             '|kkkkkxoooooooooooooo|\n' \
             '----------------------\n'
         assert filled_canvas.matrix_to_str() == expected_matrix
+
+    @pytest.mark.parametrize('command_line', [
+        'B 17 2 o',  # Already filled with 's'
+        'B 6 2 o',  # Already filled with 'x'
+    ])
+    def test_fails_when_target_is_not_empty(self, command_line, filled_canvas):
+        BucketFillCommand('B 17 2 s').draw(filled_canvas)
+
+        with pytest.raises(DrawingError) as excinfo:
+            BucketFillCommand(command_line).draw(filled_canvas)
+        assert excinfo.value.message == 'Target area is already filled.'
