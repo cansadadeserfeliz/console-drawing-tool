@@ -4,7 +4,7 @@ from drawing import (
     CreateRectangleCommand,
     BucketFillCommand,
 )
-from drawing.exceptions import CommandNotFound
+from drawing.exceptions import CommandNotFound, FileFormatError
 from config import (
     INPUT_FILENAME,
     OUTPUT_FILENAME,
@@ -17,17 +17,13 @@ COMMAND_MAPPER = {
 }
 
 
-def draw_canvas_into_file(canvas_matrix_str, mode='a'):
-    with open(OUTPUT_FILENAME, mode) as writer:
-        writer.write(canvas_matrix_str)
+def draw_canvas_into_file(canvas, filename=OUTPUT_FILENAME):
+    with open(filename, 'w') as writer:
+        writer.write(canvas.matrix_to_str())
 
-
-def draw(canvas):
-    draw_canvas_into_file(canvas.matrix_to_str(), mode='w')
-
-    for command in canvas.commands:
-        command.draw(canvas)
-        draw_canvas_into_file(canvas.matrix_to_str())
+        for command in canvas.commands:
+            command.draw(canvas)
+            writer.write(canvas.matrix_to_str())
 
 
 def read_input(filename=INPUT_FILENAME):
@@ -39,20 +35,19 @@ def read_input(filename=INPUT_FILENAME):
                     raise CommandNotFound('"Create Canvas" command is not provided.')
                 canvas = Canvas(line)
                 continue
-            # TODO: check if the line is empty
+            if line.startswith('C'):
+                raise FileFormatError('"Create Canvas" command appears more than once.')
+            if not line.strip():
+                raise FileFormatError('Input file cannot contain empty lines.')
             command_name = line[0]
             try:
                 command_class = COMMAND_MAPPER[command_name]
-            except ValueError:
-                raise CommandNotFound(f'Unknown command: {command_name}.')
+            except KeyError:
+                raise CommandNotFound(f'Unknown command: "{command_name}".')
             canvas.commands.append(command_class(line))
     return canvas
 
 
-def run():
-    canvas = read_input()
-    draw(canvas)
-
-
 if __name__ == '__main__':
-    run()
+    canvas = read_input()
+    draw_canvas_into_file(canvas)
